@@ -18,7 +18,8 @@
     "@antv/x6-plugin-transform": "^2.1.8",
     "@antv/x6-vue-shape": "^2.1.2",
     "@cyhnkckali/vue3-color-picker": "^2.0.2",
-    "ant-design-vue": "^4.2.5",
+    "ant-design-vue": "^4.2.6",
+    "less": "^4.2.0",
     "lodash-es": "^4.17.21",
     "vue": "^3.5.12"
   },

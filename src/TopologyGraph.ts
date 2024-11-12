@@ -9,7 +9,6 @@ export class TopologyGraph {
   graph: Graph
   private eventBus: EventBus
   selectedNode = ref<DeviceNode | null>(null)
-
   constructor(container: HTMLElement) {
     this.eventBus = EventBus.getInstance()
     this.graph = new Graph({
@@ -106,7 +105,7 @@ export class TopologyGraph {
     // 监听节点选中事件
     this.graph.on('node:click', ({ node }) => {
       // 更新选中节点
-      debugger
+      // debugger
       const oldNode = this.selectedNode
       if (oldNode) {
         oldNode.value?.setSelected(false)
