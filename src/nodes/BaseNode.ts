@@ -17,6 +17,9 @@ export class BaseNode extends Node {
     super(options)
     this.eventBus = EventBus.getInstance()
   }
+  canEmbedding(node: BaseNode) {
+    return false
+  }
   // 添加一个自定义方法
   setSelected(selected: boolean) {
     this.isSelected = selected

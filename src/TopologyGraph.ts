@@ -3,14 +3,17 @@ import { EventBus } from './utils/EventBus'
 import { DeviceNode } from './nodes'
 import { Transform } from '@antv/x6-plugin-transform'
 import { Selection } from '@antv/x6-plugin-selection'
+import { MiniMap } from '@antv/x6-plugin-minimap'
+
 import { ref } from 'vue'
+import { BaseNode } from './nodes/BaseNode'
 
 export class TopologyGraph {
   graph: Graph
   private eventBus: EventBus
   selectedNode = ref<DeviceNode | null>(null)
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, miniMapContainer: HTMLElement) {
     this.eventBus = EventBus.getInstance()
     this.graph = new Graph({
       container: container,
@@ -53,16 +56,16 @@ export class TopologyGraph {
         enabled: true,
         findParent({ node }) {
           const bbox = node.getBBox()
-          const data = node.getData<{ submask: boolean; regular: boolean }>() || {}
-          const currentNodeType = data.submask ? 'submask' : data.regular ? 'regular' : 'node'
+          node.toFront()
+          node.children?.forEach(child => {
+            child.toFront()
+          })
 
-          return this.getNodes().filter(node => {
-            const data = node.getData<{ submask: boolean; regular: boolean }>()
-            if (!data) {
-              return
-            }
-            if (data.regular || !(currentNodeType === 'submask' && data.submask)) {
-              const targetBBox = node.getBBox()
+          return this.getNodes().filter(parent => {
+            const parentNode = parent as BaseNode
+            if (parentNode.canEmbedding && parentNode.canEmbedding(node as BaseNode)) {
+              const targetBBox = parent.getBBox()
+              console.log(bbox.isIntersectWithRect(targetBBox))
               return bbox.isIntersectWithRect(targetBBox)
             }
             return false
@@ -86,10 +89,10 @@ export class TopologyGraph {
             }
             return false
           },
-          minWidth: 1,
-          maxWidth: 400,
-          minHeight: 1,
-          maxHeight: 400,
+          minWidth: 300,
+          maxWidth: 900,
+          minHeight: 300,
+          maxHeight: 900,
           restrict: false,
           preserveAspectRatio: false
         }
@@ -99,6 +102,14 @@ export class TopologyGraph {
         multiple: false
       })
     )
+    this.graph.use(
+      new MiniMap({
+        container: miniMapContainer,
+        width: 200,
+        height: 160,
+        padding: 10
+      })
+    )
     this.initializeEvents()
   }
 
@@ -106,7 +117,6 @@ export class TopologyGraph {
     // 监听节点选中事件
     this.graph.on('node:click', ({ node }) => {
       // 更新选中节点
-      debugger
       const oldNode = this.selectedNode
       if (oldNode) {
         oldNode.value?.setSelected(false)

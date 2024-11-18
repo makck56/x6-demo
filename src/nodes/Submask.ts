@@ -54,6 +54,14 @@ export class Submask extends BaseNode {
     })
     this.toggleExpand = this.toggleExpand.bind(this)
   }
+
+  canEmbedding(node: BaseNode) {
+    if (node.shape === 'device') {
+      return true
+    }
+    return false
+  }
+
   protected hideChildren() {
     const children = this.getChildren() || []
     children.forEach(child => {

@@ -16,7 +16,8 @@ const topologyGraph = ref<TopologyGraph | null>()
 
 const initGrap = () => {
   const container = document.querySelector('#container') as HTMLElement
-  topologyGraph.value = new TopologyGraph(container)
+  const miniMapContainer = document.querySelector('#miniMapContainer') as HTMLElement
+  topologyGraph.value = new TopologyGraph(container,miniMapContainer)
   // graph.on('node:click', ({ e, x, y, node, view }) => {
   //   selectNode.value = node
   //   selectEdge.value = null
@@ -121,6 +122,7 @@ onMounted(() => {
         </div>
       </template>
     </div>
+    <div id="miniMapContainer" class="absolute top-0 right-[260px] bg-white border border-base"></div>
   </div>
 </template>
 

@@ -93,6 +93,9 @@ export class RegularArea extends BaseNode {
     })
     this.toggleExpand = this.toggleExpand.bind(this)
   }
+  canEmbedding(node: BaseNode) {
+    return true
+  }
   protected hideChildren() {
     const children = this.getChildren() || []
     children.forEach(child => {
